@@ -32,12 +32,14 @@ if ($corepage !== 'index.php') {
             <th scope="col">Username</th>
             <th scope="col">Role</th>
             <th scope="col">Status</th>
+            <th scope="col">ID Document</th>
+            <th scope="col">Eligibility Document</th>
             <th scope="col">Action</th>
         </tr>
     </thead>
     <tbody>
         <?php
-        $query = "SELECT * FROM `users`";
+        $query = "SELECT u.*, p.photo, p.eligibility_document FROM `users` u LEFT JOIN `players` p ON u.id = p.user_id";
         $stmt = $db_con->prepare($query);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -51,15 +53,20 @@ if ($corepage !== 'index.php') {
                 <td><?php echo ucwords($row['role']); ?></td>
                 <td><?php echo $row['status']; ?></td>
                 <td>
-                    <?php if ($row['role'] == 'coach') : ?>
-                        <a class="btn btn-xs btn-primary" href="index.php?page=view-members&id=<?php echo base64_encode($row['id']); ?>">
-                            <i class="fa fa-eye"></i> View Members
-                        </a>
-                    <?php elseif ($row['role'] == 'player') : ?>
-                        <a class="btn btn-xs btn-info" href="index.php?page=view-document&id=<?php echo base64_encode($row['id']); ?>">
-                            <i class="fa fa-file"></i> View Documents
+                    <?php if ($row['role'] == 'player' && !empty($row['photo'])) : ?>
+                        <a class="btn btn-xs btn-info" href="../uploads/<?php echo $row['photo']; ?>" target="_blank">
+                            <i class="fa fa-eye"></i> View ID
                         </a>
                     <?php endif; ?>
+                </td>
+                <td>
+                    <?php if ($row['role'] == 'player' && !empty($row['eligibility_document'])) : ?>
+                        <a class="btn btn-xs btn-primary" href="../uploads/<?php echo $row['eligibility_document']; ?>" target="_blank">
+                            <i class="fa fa-eye"></i> View Document
+                        </a>
+                    <?php endif; ?>
+                </td>
+                <td>
                     <a class="btn btn-xs btn-warning" href="index.php?page=edit-user&id=<?php echo base64_encode($row['id']); ?>">
                         <i class="fa fa-edit"></i> Edit
                     </a>

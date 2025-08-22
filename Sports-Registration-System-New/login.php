@@ -25,13 +25,14 @@ if (isset($_POST['login'])) {
         $user = get_user_by_username($username);
 
         if ($user && password_verify($password, $user['password'])) {
+            $_SESSION['user_login'] = $username;
+            $_SESSION['user_role'] = $user['role'];
+            $_SESSION['user_status'] = $user['status'];
+
             if ($user['status'] === 'approved') {
-                $_SESSION['user_login'] = $username;
-                $_SESSION['user_role'] = $user['role'];
-                $_SESSION['user_status'] = $user['status'];
                 redirect_to_dashboard();
             } else {
-                $status_error = "Your account is " . $user['status'] . ". Please wait for admin approval.";
+                redirect('home.php');
             }
         } else {
             $worngpass = "Invalid username or password!";

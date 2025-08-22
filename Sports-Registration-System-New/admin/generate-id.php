@@ -54,6 +54,7 @@ if (isset($_GET['id'])) {
     <div class="container">
         <div class="id-card mx-auto">
             <div class="id-card-header">
+            <img src="../images/logo.png" alt="Logo" class="logo">
                 <h2>Player Identification Card</h2>
             </div>
             <div class="id-card-body">

@@ -49,13 +49,24 @@ if (isset($_POST['register'])) {
                 $photo_name = $player_id . date('YmdHis') . '.' . $photo_ext;
             }
 
-            $insert_player_stmt = $db_con->prepare("INSERT INTO `players`(`user_id`, `player_id`, `full_name`, `age`, `gender`, `sport_id`, `team_id`, `contact_number`, `address`, `photo`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $insert_player_stmt->bind_param("issisissss", $user_id, $player_id, $full_name, $age, $gender, $sport_id, $team_id, $contact_number, $address, $photo_name);
+            $eligibility_document_name = '';
+            if (!empty($_FILES['eligibility_document']['name'])) {
+                $eligibility_document = explode('.', $_FILES['eligibility_document']['name']);
+                $eligibility_document_ext = end($eligibility_document);
+                $eligibility_document_name = 'eligibility_' . $player_id . date('YmdHis') . '.' . $eligibility_document_ext;
+            }
+
+            $insert_player_stmt = $db_con->prepare("INSERT INTO `players`(`user_id`, `player_id`, `full_name`, `age`, `gender`, `sport_id`, `team_id`, `contact_number`, `address`, `photo`, `eligibility_document`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $insert_player_stmt->bind_param("issisisssss", $user_id, $player_id, $full_name, $age, $gender, $sport_id, $team_id, $contact_number, $address, $photo_name, $eligibility_document_name);
             $insert_player_stmt->execute();
             $insert_player_stmt->close();
 
             if (!empty($photo_name)) {
                 move_uploaded_file($_FILES['photo']['tmp_name'], 'uploads/' . $photo_name);
+            }
+
+            if (!empty($eligibility_document_name)) {
+                move_uploaded_file($_FILES['eligibility_document']['tmp_name'], 'uploads/' . $eligibility_document_name);
             }
         } elseif ($selected_role === 'coach') {
             $experience_years = $_POST['experience_years'] ?? 0;
@@ -69,7 +80,7 @@ if (isset($_POST['register'])) {
             $insert_coach_stmt->close();
         }
         $_SESSION['message'] = "Registration successful! You can log in now. Approval is pending.";
-        redirect('admin/login.php');
+        redirect('login.php');
     } else {
         $error = "Registration failed. Please try again.";
     }
@@ -164,6 +175,10 @@ require_once 'templates/header.php';
                     <div class="form-group">
                         <label for="photo">ID Picture</label>
                         <input name="photo" type="file" class="form-control" id="photo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eligibility_document">Eligibility Document</label>
+                        <input name="eligibility_document" type="file" class="form-control" id="eligibility_document" required>
                     </div>
                 </div>
 
