@@ -21,6 +21,8 @@ $user = get_user_by_username($_SESSION['user_login']);
                 </a>
                 <a href="dashboard.php?page=view-sports" class="list-group-item list-group-item-action"><i class="fas fa-volleyball-ball"></i> View Sports</a>
                 <a href="dashboard.php?page=view-players" class="list-group-item list-group-item-action"><i class="fas fa-users"></i> View Players</a>
+                <a href="dashboard.php?page=invite-player" class="list-group-item list-group-item-action"><i class="fas fa-user-plus"></i> Invite Player</a>
+                <a href="dashboard.php?page=manage-join-requests" class="list-group-item list-group-item-action"><i class="fas fa-tasks"></i> Manage Join Requests</a>
                 <a href="dashboard.php?page=create-team" class="list-group-item list-group-item-action"><i class="fas fa-users-cog"></i> Create Team</a>
                 <a href="dashboard.php?page=create-player" class="list-group-item list-group-item-action"><i class="fas fa-user-plus"></i> Create Player</a>
                 <a href="dashboard.php?page=view-coaches" class="list-group-item list-group-item-action"><i class="fas fa-chalkboard-teacher"></i> View Coaches</a>
@@ -32,7 +34,7 @@ $user = get_user_by_username($_SESSION['user_login']);
             <div class="content">
                 <?php
                 $page = $_GET['page'] ?? 'main';
-                $allowed_pages = ['main', 'view-sports', 'view-players', 'create-team', 'create-player', 'view-coaches'];
+                $allowed_pages = ['main', 'view-sports', 'view-players', 'invite-player', 'manage-join-requests', 'create-team', 'create-player', 'view-coaches'];
 
                 if (in_array($page, $allowed_pages) && file_exists('partials/' . $page . '.php')) {
                     require_once 'partials/' . $page . '.php';
